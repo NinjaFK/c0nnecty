@@ -79,6 +79,21 @@ public:
         }
         return moves;
     }
+
+    bool isBoardFull()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                if (board[i][j] = 0)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 };
 
 // eval
