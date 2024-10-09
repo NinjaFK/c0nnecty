@@ -5,6 +5,13 @@
 class Move
 {
 public:
+    Move(int p, int s)
+    {
+        pos = p;
+        side = s;
+    }
+    int pos;
+    int side;
 };
 
 class Board
@@ -57,6 +64,20 @@ public:
             }
             std::cout << '\n';
         }
+    }
+
+    std::vector<Move> getmoves()
+    {
+        std::vector<Move> moves;
+
+        for (int i = 0; i < 7; i++)
+        {
+            if (board[0][i] == 0)
+            {
+                moves.push_back(Move(i, turn));
+            }
+        }
+        return moves;
     }
 };
 
