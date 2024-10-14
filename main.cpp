@@ -12,7 +12,18 @@ public:
     }
     int pos;
     int side;
+
+    friend std::ostream &operator<<(std::ostream &os, const Move &move);
 };
+
+std::ostream &operator<<(std::ostream &os, const Move &move)
+{
+    if (move.side == 1)
+        os << "\033[31m" << move.pos;
+    else
+        os << "\033[33m" << move.pos;
+    return os;
+}
 
 class Board
 {
@@ -41,8 +52,6 @@ public:
 
     void displayBoard()
     {
-        board[5][0] = 1;
-        board[5][1] = 2;
         for (int i = 0; i < 6; i++)
         {
             for (int j = 0; j < 7; j++)
@@ -77,6 +86,12 @@ public:
                 moves.push_back(Move(i, turn));
             }
         }
+
+        /* for (auto it : moves)
+        {
+            std::cout << it << " \n";
+        } */
+
         return moves;
     }
 
