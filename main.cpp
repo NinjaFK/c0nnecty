@@ -109,6 +109,25 @@ public:
         }
         return true;
     }
+
+    void makeMove(Move toMake)
+    {
+        int count = 0;
+        history.push_back(toMake);
+        for (int i = 1; i < 6; i++)
+        {
+            if (board[i][toMake.pos] != 0)
+            {
+                break;
+            }
+            count++;
+        }
+        // std::cout << "count: " << count << '\n';
+        // std::cout << "tOmake.pos " << toMake.pos << '\n';
+        // std::cout << "toMake.side: " << toMake.side << '\n';
+        board[count][toMake.pos] = toMake.side;
+        turn = (turn == 1) ? 2 : 1;
+    }
 };
 
 // eval
@@ -134,9 +153,11 @@ int main()
     bool stillPlaying = false;
     int pos = 0;
 
-    game.displayBoard();
-
     while (true)
     {
+        game.displayBoard();
+        std::cin >> pos;
+        game.turn = 1;
+        game.makeMove(Move(pos, game.turn));
     }
 }
