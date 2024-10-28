@@ -24,7 +24,13 @@ std::ostream &operator<<(std::ostream &os, const Move &move)
         os << "\033[33m" << move.pos;
     return os;
 }
-
+const int evalTable[6][7] = {
+    {3, 4, 5, 7, 5, 4, 3},
+    {4, 6, 8, 10, 8, 6, 4},
+    {5, 8, 11, 13, 11, 8, 5},
+    {5, 8, 11, 13, 11, 8, 5},
+    {4, 6, 8, 10, 8, 6, 4},
+    {3, 4, 5, 7, 5, 4, 3}};
 class Board
 {
 public:
@@ -146,8 +152,6 @@ public:
         const std::vector<std::pair<int, int>> directions = {{0, 1}, {1, 0}, {1, 1}, {-1, 1}};
         for (const auto &[dx, dy] : directions)
         {
-            std::cout << "pos: " << check_consecutive(x, y, dx, dy, side) << '\n';
-            std::cout << "pos2: " << check_consecutive(x, y, -dx, -dy, side) << '\n';
             if ((check_consecutive(x, y, dx, dy, side) + check_consecutive(x, y, -dx, -dy, side)) >= 3)
             {
                 return true;
@@ -184,7 +188,22 @@ public:
 // eval
 int evalFunction(Board board)
 {
-    return 0;
+    int sum = 0;
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 7; j++)
+        {
+            if (board.board[i][j] == 1)
+            {
+                sum += evalTable[i][j];
+            }
+            else if (board.board[i][j] == 2)
+            {
+                sum -= evalTable[i][j];
+            }
+        }
+    }
+    return sum;
 }
 
 int minimax(Board board, int depth);
@@ -215,8 +234,10 @@ int main()
         game.turn = 1;
         game.makeMove(Move(pos, game.turn));
         game.displayBoard();
+        std::cout << "Eval: " << evalFunction(game) << '\n';
         std::cin >> pos;
         game.turn = 2;
         game.makeMove(Move(pos, game.turn));
+        std::cout << "Eval: " << evalFunction(game) << '\n';
     }
 }
