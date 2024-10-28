@@ -73,6 +73,7 @@ public:
             }
             std::cout << '\n';
         }
+        std::cout << reset;
     }
 
     std::vector<Move> getmoves()
@@ -110,7 +111,51 @@ public:
         return true;
     }
 
-    void makeMove(Move toMake)
+    int check_consecutive(int x, int y, int dx, int dy, int side)
+    {
+        int consecutive = 0;
+        int orig_x = x;
+        int orig_y = y;
+        // std::cout << board[orig_x][orig_y] << std::endl;
+        for (int i = 0; i < 3; i++)
+        {
+            x += dx;
+            y += dy;
+            if (y < 0 || y > 5)
+            {
+                break;
+            }
+            if (x < 0 || x > 6)
+            {
+                break;
+            }
+            if (board[x][y] == board[orig_x][orig_y])
+            {
+                consecutive++;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return consecutive;
+    }
+
+    bool checkWin(int x, int y, int side)
+    {
+        const std::vector<std::pair<int, int>> directions = {{0, 1}, {1, 0}, {1, 1}, {-1, 1}};
+        for (const auto &[dx, dy] : directions)
+        {
+            std::cout << "pos: " << check_consecutive(x, y, dx, dy, side) << '\n';
+            std::cout << "pos2: " << check_consecutive(x, y, -dx, -dy, side) << '\n';
+            if ((check_consecutive(x, y, dx, dy, side) + check_consecutive(x, y, -dx, -dy, side)) >= 3)
+            {
+                return true;
+            }
+        }
+        return 0;
+    }
+    int makeMove(Move toMake)
     {
         int count = 0;
         history.push_back(toMake);
@@ -122,17 +167,24 @@ public:
             }
             count++;
         }
-        // std::cout << "count: " << count << '\n';
-        // std::cout << "tOmake.pos " << toMake.pos << '\n';
-        // std::cout << "toMake.side: " << toMake.side << '\n';
         board[count][toMake.pos] = toMake.side;
         turn = (turn == 1) ? 2 : 1;
+
+        // winstate
+        if (checkWin(count, toMake.pos, toMake.side))
+        {
+            std::cout << "Player " << toMake.side << " wins!" << std::endl;
+            return toMake.side;
+        }
+
+        return 0;
     }
 };
 
 // eval
 int evalFunction(Board board)
 {
+    return 0;
 }
 
 int minimax(Board board, int depth);
@@ -140,11 +192,14 @@ int minimax(Board board, int depth);
 // minimaxRoot
 Move minimaxRoot(Board board, int depth)
 {
+    Move moves(1, 1);
+    return moves;
 }
 
 // minimax
 int minimax(Board board, int depth)
 {
+    return 0;
 }
 
 int main()
@@ -158,6 +213,10 @@ int main()
         game.displayBoard();
         std::cin >> pos;
         game.turn = 1;
+        game.makeMove(Move(pos, game.turn));
+        game.displayBoard();
+        std::cin >> pos;
+        game.turn = 2;
         game.makeMove(Move(pos, game.turn));
     }
 }
