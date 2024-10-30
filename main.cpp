@@ -226,18 +226,35 @@ int main()
     Board game;
     bool stillPlaying = false;
     int pos = 0;
+    Move move = Move(0, 0);
 
     while (true)
     {
         game.displayBoard();
-        std::cin >> pos;
-        game.turn = 1;
-        game.makeMove(Move(pos, game.turn));
-        game.displayBoard();
-        std::cout << "Eval: " << evalFunction(game) << '\n';
-        std::cin >> pos;
-        game.turn = 2;
-        game.makeMove(Move(pos, game.turn));
-        std::cout << "Eval: " << evalFunction(game) << '\n';
+
+        // check if game is over
+
+        if (true)
+        {
+            std::cout << "Your move: ";
+            while (true)
+            {
+                std::cin >> pos;
+                if (game.board[0][pos] == 0)
+                {
+                    break;
+                }
+                else
+                {
+                    std::cout << "Please choose valid move: ";
+                }
+            }
+            game.makeMove(Move(pos, game.turn));
+        }
+        else
+        {
+            // move = negamaxRoot(game, 7);
+            game.makeMove(move);
+        }
     }
 }
