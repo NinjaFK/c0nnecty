@@ -36,6 +36,7 @@ class Board
 public:
     int board[6][7];
     int turn;
+    int over;
     std::vector<Move> history;
     const std::string reset = "\033[0m";
     const std::string r = "\033[31m";
@@ -44,6 +45,8 @@ public:
 
     Board()
     {
+        turn = 1;
+        over = 0;
         for (int i = 0; i < 6; i++)
         {
             for (int j = 0; j < 7; j++)
@@ -177,7 +180,7 @@ public:
         // winstate
         if (checkWin(count, toMake.pos, toMake.side))
         {
-            std::cout << "Player " << toMake.side << " wins!" << std::endl;
+            over = 1;
             return toMake.side;
         }
 
@@ -206,19 +209,44 @@ int evalFunction(Board board)
     return sum;
 }
 
-int minimax(Board board, int depth);
+int negamax(Board board, int depth);
 
 // minimaxRoot
-Move minimaxRoot(Board board, int depth)
+Move negamaxRoot(Board board, int depth)
 {
     Move moves(1, 1);
     return moves;
 }
 
 // minimax
-int minimax(Board board, int depth)
+int negamax(Board board, int depth)
 {
-    return 0;
+    if (board.over == 1)
+    {
+        return -10000;
+    }
+    if (board.isBoardFull())
+    {
+        return 0;
+    }
+
+    if (depth == 0)
+    {
+        return evalFunction(board);
+    }
+
+    std::vector<Move> moves = board.getmoves();
+    int bestMoveValue = -999999;
+    int value = 0;
+
+    for (int i = 0; i < moves.size(); i++)
+    {
+        Board cboard = board;
+        cboard.makeMove(moves[i]);
+        value = -negamax(board, depth - 1);
+        bestMoveValue = std::max(value, bestMoveValue);
+    }
+    return bestMoveValue;
 }
 
 int main()
