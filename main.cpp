@@ -111,7 +111,7 @@ public:
         {
             for (int j = 0; j < 7; j++)
             {
-                if (board[i][j] = 0)
+                if (board[i][j] == 0)
                 {
                     return false;
                 }
@@ -214,8 +214,25 @@ int negamax(Board board, int depth);
 // minimaxRoot
 Move negamaxRoot(Board board, int depth)
 {
-    Move moves(1, 1);
-    return moves;
+    std::vector<Move> moves = board.getmoves();
+    Move bestMove = Move(0, 0);
+    int bestMoveValue = -999999;
+    int value = 0;
+
+    for (int i = 0; i < moves.size(); i++)
+    {
+        Board cboard = board;
+        cboard.makeMove(moves[i]);
+        std::cout << "moves[i]: " << moves[i] << '\n';
+        value = -negamax(cboard, depth - 1);
+        std::cout << "value: " << value << '\n';
+        if (value > bestMoveValue)
+        {
+            bestMove = moves[i];
+            bestMoveValue = value;
+        }
+    }
+    return bestMove;
 }
 
 // minimax
@@ -243,7 +260,7 @@ int negamax(Board board, int depth)
     {
         Board cboard = board;
         cboard.makeMove(moves[i]);
-        value = -negamax(board, depth - 1);
+        value = -negamax(cboard, depth - 1);
         bestMoveValue = std::max(value, bestMoveValue);
     }
     return bestMoveValue;
@@ -259,10 +276,29 @@ int main()
     while (true)
     {
         game.displayBoard();
+        std::cout << '\n';
+        if (game.over)
+        {
+            if (game.turn)
+            {
+                std::cout << "Yellow wins\n";
+            }
+            else
+            {
+                std::cout << "Red wins\n";
+            }
+
+            break;
+        }
+        if (game.isBoardFull())
+        {
+            std::cout << "Board Full\n";
+            break;
+        }
 
         // check if game is over
 
-        if (true)
+        if (game.turn == 1)
         {
             std::cout << "Your move: ";
             while (true)
@@ -278,11 +314,13 @@ int main()
                 }
             }
             game.makeMove(Move(pos, game.turn));
+            std::cout << "eval: " << evalFunction(game) << '\n';
         }
         else
         {
-            // move = negamaxRoot(game, 7);
+            move = negamaxRoot(game, 5);
             game.makeMove(move);
+            std::cout << "eval: " << evalFunction(game) << '\n';
         }
     }
 }
