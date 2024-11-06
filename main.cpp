@@ -130,11 +130,12 @@ public:
         {
             x += dx;
             y += dy;
-            if (y < 0 || y > 5)
+            // std::cout << "board[" << x << "][" << y << "] == board[" << orig_x << "][" << orig_y << "] = " << (board[x][y] == board[orig_x][orig_y]) << '\n';
+            if (y < 0 || y > 6)
             {
                 break;
             }
-            if (x < 0 || x > 6)
+            if (x < 0 || x > 5)
             {
                 break;
             }
@@ -155,6 +156,9 @@ public:
         const std::vector<std::pair<int, int>> directions = {{0, 1}, {1, 0}, {1, 1}, {-1, 1}};
         for (const auto &[dx, dy] : directions)
         {
+            // std::cout << "pos: " << check_consecutive(x, y, dx, dy, side) << '\n';
+            //  std::cout << "pos2: " << check_consecutive(x, y, -dx, -dy, side) << '\n';
+            // std::cout << x << ' ' << y << ' ' << -dx << ' ' << -dy << ' ' << side << '\n';
             if ((check_consecutive(x, y, dx, dy, side) + check_consecutive(x, y, -dx, -dy, side)) >= 3)
             {
                 return true;
