@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <UGI.cpp>
 
 class Move
 {
@@ -271,6 +272,18 @@ int negamax(Board board, int depth)
 }
 
 int main()
+{
+
+    std::string input;
+    std::getline(std::cin, input);
+
+    if (input == "ugi")
+        UGI();
+    if (input == "playbot")
+        playbot();
+}
+
+void playbot()
 {
     Board game;
     bool stillPlaying = false;
