@@ -3,8 +3,9 @@
 #include <cmath>
 #include <sstream>
 #include <string>
+#include <board.h>
 
-[[nodiscard]] inline std::vector<std::string> splitString(const std::string &string,
+/* [[nodiscard]] inline std::vector<std::string> splitString(const std::string &string,
                                                           const char &delimiter)
 {
     std::stringstream string_stream(string);
@@ -15,7 +16,7 @@
         seglist.emplace_back(segment);
 
     return seglist;
-}
+} */
 
 void UGI()
 {
@@ -43,7 +44,7 @@ void UGI()
             return;
     }
 
-    Board game;
+    Board game("7/7/7/7/7/7 0");
     bool stillPlaying = false;
     int pos = 0;
 
@@ -60,6 +61,20 @@ void UGI()
             std::cout << "readyok" << std::endl;
             break;
         }
+
+        else if (split[0] == "position")
+        {
+            if (split[1] == "fen")
+            {
+                std::string fen;
+                fen.append(split[2]);
+                fen.append(" ");
+                fen.append(split[3]);
+
+                game = Board(fen);
+            }
+        }
+
         else if (split[0] == "query")
         {
             if (split[1] == "p1turn")
