@@ -2,6 +2,19 @@
 #include <vector>
 #include <cmath>
 
+[[nodiscard]] inline std::vector<std::string> splitString(const std::string &string,
+                                                          const char &delimiter)
+{
+    std::stringstream string_stream(string);
+    std::string segment;
+    std::vector<std::string> seglist;
+
+    while (std::getline(string_stream, segment, delimiter))
+        seglist.emplace_back(segment);
+
+    return seglist;
+}
+
 class Move
 {
 public:
@@ -43,17 +56,10 @@ public:
     const std::string y = "\033[33m";
     const std::string b = "\033[34m";
 
-    Board()
+    Board(std::string fen)
     {
-        turn = 1;
         over = 0;
-        for (int i = 0; i < 6; i++)
-        {
-            for (int j = 0; j < 7; j++)
-            {
-                board[i][j] = 0;
-            }
-        }
+        setFen(fen);
     }
 
     // Red is 1
@@ -103,6 +109,24 @@ public:
         } */
 
         return moves;
+    }
+
+    void setFen(std::string fen)
+    {
+        // Samples
+        // position fen 7/7/7/7/7/7 0
+
+        std::vector<std::string> params = splitString(fen, ' ');
+
+        std::vector<std::string> pos = splitString(params[0], '/');
+
+        for (int i = 0; i < 5; i++)
+        {
+            for (int j = 0; j < pos[i].size(); i++)
+            {
+                /* code */
+            }
+        }
     }
 
     bool isBoardFull()
