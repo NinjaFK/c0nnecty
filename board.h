@@ -126,12 +126,11 @@ public:
 
         std::vector<std::string> pos = splitString(params[0], '/');
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 6; i++)
         {
             int col = 0;
             for (int j = 0; j < pos[i].size(); j++)
             {
-
                 if (std::isdigit(pos[i][j]))
                 {
                     col += pos[i][j] - '0';
