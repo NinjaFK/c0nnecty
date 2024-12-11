@@ -68,6 +68,11 @@ void UGI()
 
                 game = Board(fen);
             }
+            int i = 4;
+            if (split.size() < i && split[i] == "moves")
+            {
+                i++;
+            }
         }
 
         else if (split[0] == "query")
@@ -99,6 +104,11 @@ void UGI()
                 if (game.isBoardFull())
                     std::cout << "reponse draw" << std::endl;
             }
+        }
+
+        else if (split[0] == "display")
+        {
+            game.displayBoard();
         }
 
         else if (split[0] == "quit")
