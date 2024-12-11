@@ -36,6 +36,10 @@ std::ostream &operator<<(std::ostream &os, const Move &move)
         os << "\033[33m" << move.pos;
     return os;
 }
+static const std::string reset = "\033[0m";
+static const std::string r = "\033[31m";
+static const std::string y = "\033[33m";
+static const std::string b = "\033[34m";
 const int evalTable[6][7] = {
     {3, 4, 5, 7, 5, 4, 3},
     {4, 6, 8, 10, 8, 6, 4},
@@ -46,14 +50,10 @@ const int evalTable[6][7] = {
 class Board
 {
 public:
-    int board[6][7];
+    int board[6][7] = {0};
     int turn;
     int over;
     std::vector<Move> history;
-    const std::string reset = "\033[0m";
-    const std::string r = "\033[31m";
-    const std::string y = "\033[33m";
-    const std::string b = "\033[34m";
 
     Board(std::string fen)
     {
