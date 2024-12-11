@@ -78,6 +78,8 @@ int negamax(Board board, int depth)
     return bestMoveValue;
 }
 
+void playbot();
+
 int main()
 {
 
@@ -92,7 +94,7 @@ int main()
 
 void playbot()
 {
-    Board game;
+    Board game("7/7/7/7/7/7 0");
     bool stillPlaying = false;
     int pos = 0;
     Move move = Move(0, 0);
@@ -101,8 +103,10 @@ void playbot()
     {
         game.displayBoard();
         std::cout << '\n';
+        std::cout << "game.over " << game.over << '\n';
         if (game.over)
         {
+            std::cout << "Game over ";
             if (game.turn)
             {
                 std::cout << "Yellow wins\n";
@@ -122,7 +126,7 @@ void playbot()
 
         // check if game is over
 
-        if (game.turn == 1)
+        if (game.turn == 0)
         {
             std::cout << "Your move: ";
             while (true)
