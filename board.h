@@ -1,6 +1,5 @@
-#include <iostream>
-#include <vector>
-#include <cmath>
+#pragma once
+#include "include.h"
 
 [[nodiscard]] inline std::vector<std::string> splitString(const std::string &string,
                                                           const char &delimiter)
