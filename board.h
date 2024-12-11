@@ -58,6 +58,13 @@ public:
     Board(std::string fen)
     {
         over = 0;
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                board[i][j] = 0;
+            }
+        }
         setFen(fen);
     }
 
@@ -121,11 +128,22 @@ public:
 
         for (int i = 0; i < 5; i++)
         {
-            for (int j = 0; j < pos[i].size(); i++)
+            int col = 0;
+            for (int j = 0; j < pos[i].size(); j++)
             {
-                /* code */
+
+                if (std::isdigit(pos[i][j]))
+                {
+                    col += pos[i][j] - '0';
+                }
+                else
+                {
+                    board[i][col] = (pos[i][j] == 'r') ? 1 : 2;
+                    col++;
+                }
             }
         }
+        turn = params[1][0] - '0';
     }
 
     bool isBoardFull()
