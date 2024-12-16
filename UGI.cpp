@@ -111,6 +111,22 @@ void UGI()
             game.displayBoard();
         }
 
+        else if (split[0] == "checkwin")
+        {
+            int winstate = game.checkWin();
+            if (winstate)
+            {
+                if (winstate == 2)
+                {
+                    std::cout << "Yellow wins\n";
+                }
+                else
+                {
+                    std::cout << "Red wins\n";
+                }
+            }
+        }
+
         else if (split[0] == "quit")
             return;
     }
