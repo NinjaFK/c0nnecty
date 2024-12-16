@@ -191,7 +191,7 @@ public:
         return consecutive;
     }
 
-    bool checkWin(int x, int y, int side)
+    bool pieceCheckWin(int x, int y, int side)
     {
         const std::vector<std::pair<int, int>> directions = {{0, 1}, {1, 0}, {1, 1}, {-1, 1}};
         for (const auto &[dx, dy] : directions)
@@ -222,12 +222,31 @@ public:
         turn = (turn == 1) ? 2 : 1;
 
         // winstate
-        if (checkWin(count, toMake.pos, toMake.side))
+        if (pieceCheckWin(count, toMake.pos, toMake.side))
         {
             over = 1;
             return toMake.side;
         }
 
+        return 0;
+    }
+
+    int checkWin()
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                if (board[i][j] != 0)
+                {
+                    if (pieceCheckWin(i, j, board[i][j]))
+                    {
+                        over = 1;
+                        return board[i][j];
+                    }
+                }
+            }
+        }
         return 0;
     }
 };
