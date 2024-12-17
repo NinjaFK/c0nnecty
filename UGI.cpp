@@ -69,7 +69,7 @@ void UGI()
                 game = Board(fen);
             }
             int i = 4;
-            if (split.size() < i && split[i] == "moves")
+            if (split.size() > i && split[i] == "moves")
             {
                 i++;
             }
