@@ -88,7 +88,7 @@ void UGI()
         {
             if (split[1] == "p1turn")
             {
-                std::cout << "response " << game.turn << std::endl;
+                std::cout << "response " << !(game.turn - 1) << std::endl;
             }
             if (split[1] == "gameover")
             {
