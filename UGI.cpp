@@ -72,6 +72,15 @@ void UGI()
             if (split.size() > i && split[i] == "moves")
             {
                 i++;
+                while (split.size() > i)
+                {
+                    int test = stoi(split[i]);
+                    std::cout << "test " << test << '\n';
+                    std::cout << "turn " << game.turn << '\n';
+                    game.makeMove(Move(stoi(split[i]), game.turn));
+                    i++;
+                }
+                std::cout << '\n';
             }
         }
 
