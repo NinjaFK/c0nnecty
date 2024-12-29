@@ -94,7 +94,7 @@ int main()
 
 void playbot()
 {
-    Board game("7/7/7/7/7/7 0");
+    Board game("7/7/7/7/7/7 1");
     bool stillPlaying = false;
     int pos = 0;
     Move move = Move(0, 0);
@@ -103,7 +103,6 @@ void playbot()
     {
         game.displayBoard();
         std::cout << '\n';
-        std::cout << "game.over " << game.over << '\n';
         if (game.over)
         {
             std::cout << "Game over ";
@@ -126,7 +125,7 @@ void playbot()
 
         // check if game is over
 
-        if (game.turn == 0)
+        if (game.turn == 2)
         {
             std::cout << "Your move: ";
             while (true)
