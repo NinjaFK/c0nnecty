@@ -17,6 +17,11 @@
 class Move
 {
 public:
+    Move()
+    {
+        pos = 0;
+        side = 1;
+    }
     Move(int p, int s)
     {
         pos = p;
