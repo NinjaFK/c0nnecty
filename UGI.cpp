@@ -120,6 +120,15 @@ void UGI()
             game.displayBoard();
         }
 
+        else if (split[0] == "go")
+        {
+            int mtime = 100;
+
+            std::pair<Move, int> bestMove;
+
+            bestMove = negamaxRoot(game, 5);
+        }
+
         else if (split[0] == "checkwin")
         {
             int winstate = game.checkWin();
