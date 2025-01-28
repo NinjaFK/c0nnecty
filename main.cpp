@@ -34,27 +34,41 @@ int evalFunction(Board board)
 int negamax(Board board, int depth);
 
 // minimaxRoot
-Move negamaxRoot(Board board, int depth)
+std::pair<Move, int> negamaxRoot(Board board, int depth)
 {
     std::vector<Move> moves = board.getmoves();
+    auto start = std::chrono::high_resolution_clock::now();
+    bool timeout = false;
     Move bestMove = Move(0, 0);
     int bestMoveValue = -999999;
     int value = 0;
 
-    for (int i = 0; i < moves.size(); i++)
+    while (true)
     {
-        Board cboard = board;
-        cboard.makeMove(moves[i]);
-        std::cout << "moves[i]: " << moves[i] << '\n';
-        value = -negamax(cboard, depth - 1);
-        std::cout << "value: " << value << '\n';
-        if (value > bestMoveValue)
+        Stack stack[256];
+
+        value = -negamax(board, depth - 1);
+
+        if (!timeout)
         {
-            bestMove = moves[i];
-            bestMoveValue = value;
+            bestMove = stack[0].pv.moves[0];
         }
     }
-    return bestMove;
+
+    // for (int i = 0; i < moves.size(); i++)
+    // {
+    //     Board cboard = board;
+    //     cboard.makeMove(moves[i]);
+    //     std::cout << "moves[i]: " << moves[i] << '\n';
+    //     value = -negamax(cboard, depth - 1);
+    //     std::cout << "value: " << value << '\n';
+    //     if (value > bestMoveValue)
+    //     {
+    //         bestMove = moves[i];
+    //         bestMoveValue = value;
+    //     }
+    // }
+    return {bestMove, value};
 }
 
 // minimax
@@ -155,8 +169,10 @@ void playbot()
         }
         else
         {
-            move = negamaxRoot(game, 5);
-            game.makeMove(move);
+
+            std::pair<Move, int> bestMove;
+            bestMove = negamaxRoot(game, 5);
+            game.makeMove(bestMove.first);
             std::cout << "eval: " << evalFunction(game) << '\n';
         }
     }
