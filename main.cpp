@@ -1,5 +1,15 @@
 #include "include.h"
 
+struct PV
+{
+    std::vector<Move> moves;
+};
+
+struct Stack
+{
+    PV pv;
+};
+
 // eval
 int evalFunction(Board board)
 {
