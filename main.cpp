@@ -10,6 +10,12 @@ struct Stack
     PV pv;
 };
 
+struct SearchSettings
+{
+    std::chrono::time_point<std::chrono::high_resolution_clock> endTime;
+    bool timeOut = false;
+};
+
 // eval
 int evalFunction(Board board)
 {
@@ -34,25 +40,35 @@ int evalFunction(Board board)
 int negamax(Board board, int depth);
 
 // minimaxRoot
-std::pair<Move, int> negamaxRoot(Board board, int depth)
+std::pair<Move, int> negamaxRoot(Board board, int hardStop)
 {
     std::vector<Move> moves = board.getmoves();
     auto start = std::chrono::high_resolution_clock::now();
-    bool timeout = false;
+    int depth = 1;
     Move bestMove = Move(0, 0);
     int bestMoveValue = -999999;
     int value = 0;
+    std::chrono::time_point<std::chrono::high_resolution_clock> endTime = start + std::chrono::milliseconds(hardStop);
+
+    SearchSettings settings;
+    settings.timeOut = false;
+    settings.endTime = endTime;
 
     while (true)
     {
         Stack stack[256];
 
-        value = -negamax(board, depth - 1);
+        value = -negamax(board, depth, 0, stack, settings);
 
-        if (!timeout)
+        if (!settings.timeOut)
         {
             bestMove = stack[0].pv.moves[0];
         }
+
+        if (depth > 256)
+            break;
+
+        depth++;
     }
 
     // for (int i = 0; i < moves.size(); i++)
@@ -72,7 +88,7 @@ std::pair<Move, int> negamaxRoot(Board board, int depth)
 }
 
 // minimax
-int negamax(Board board, int depth)
+int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &settings)
 {
     if (board.over == 1)
     {
@@ -80,6 +96,12 @@ int negamax(Board board, int depth)
     }
     if (board.isBoardFull())
     {
+        return 0;
+    }
+
+    if (std::chrono::high_resolution_clock::now() >= settings.endTime)
+    {
+        settings.timeOut = true;
         return 0;
     }
 
@@ -94,6 +116,7 @@ int negamax(Board board, int depth)
 
     for (int i = 0; i < moves.size(); i++)
     {
+        stack[ply + 1].pv.moves.clear();
         Board cboard = board;
         cboard.makeMove(moves[i]);
         value = -negamax(cboard, depth - 1);
