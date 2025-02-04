@@ -148,7 +148,7 @@ void playbot()
         if (game.over)
         {
             std::cout << "Game over ";
-            if (!game.turn)
+            if (game.turn)
             {
                 std::cout << "Yellow wins\n";
             }
@@ -167,7 +167,7 @@ void playbot()
 
         // check if game is over
 
-        if (game.turn == 2)
+        if (game.turn == 1)
         {
             std::cout << "Your move: ";
             while (true)
@@ -189,7 +189,7 @@ void playbot()
         {
 
             std::pair<Move, int> bestMove;
-            bestMove = negamaxRoot(game, 5000);
+            bestMove = negamaxRoot(game, 100);
             game.makeMove(bestMove.first);
             std::cout << "eval: " << evalFunction(game) << '\n';
         }
