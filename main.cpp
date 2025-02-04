@@ -1,21 +1,5 @@
 #include "include.h"
 
-struct PV
-{
-    std::vector<Move> moves;
-};
-
-struct Stack
-{
-    PV pv;
-};
-
-struct SearchSettings
-{
-    std::chrono::time_point<std::chrono::high_resolution_clock> endTime;
-    bool timeOut = false;
-};
-
 // eval
 int evalFunction(Board board)
 {
