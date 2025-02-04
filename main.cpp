@@ -103,8 +103,17 @@ int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &setti
         stack[ply + 1].pv.moves.clear();
         Board cboard = board;
         cboard.makeMove(moves[i]);
-        value = -negamax(cboard, depth - 1);
-        bestMoveValue = std::max(value, bestMoveValue);
+        value = -negamax(cboard, depth - 1, ply + 1, stack, settings);
+        if (settings.timeOut)
+        {
+            return 0;
+        }
+        if (value > bestMoveValue)
+        {
+            stack[ply].pv.moves.clear();
+            stack[ply].pv.moves.push_back(moves[i]);
+            bestMoveValue = value;
+        }
     }
     return bestMoveValue;
 }
