@@ -21,16 +21,14 @@ int evalFunction(Board board)
     return sum;
 }
 
-int negamax(Board board, int depth);
+int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &settings);
 
 // minimaxRoot
 std::pair<Move, int> negamaxRoot(Board board, int hardStop)
 {
-    std::vector<Move> moves = board.getmoves();
     auto start = std::chrono::high_resolution_clock::now();
     int depth = 1;
     Move bestMove = Move(0, 0);
-    int bestMoveValue = -999999;
     int value = 0;
     std::chrono::time_point<std::chrono::high_resolution_clock> endTime = start + std::chrono::milliseconds(hardStop);
 
@@ -43,18 +41,22 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
         Stack stack[256];
 
         value = -negamax(board, depth, 0, stack, settings);
-
+        std::cout << "I get to depth: " << depth << '\n';
         if (!settings.timeOut)
         {
             bestMove = stack[0].pv.moves[0];
         }
 
-        if (depth > 256)
+        if (settings.timeOut || depth > 50)
+        {
             break;
+        }
 
         depth++;
     }
 
+    // std::vector<Move> moves = board.getmoves();
+    // int bestMoveValue = -999999;
     // for (int i = 0; i < moves.size(); i++)
     // {
     //     Board cboard = board;
@@ -146,7 +148,7 @@ void playbot()
         if (game.over)
         {
             std::cout << "Game over ";
-            if (game.turn)
+            if (!game.turn)
             {
                 std::cout << "Yellow wins\n";
             }
@@ -187,7 +189,7 @@ void playbot()
         {
 
             std::pair<Move, int> bestMove;
-            bestMove = negamaxRoot(game, 5);
+            bestMove = negamaxRoot(game, 5000);
             game.makeMove(bestMove.first);
             std::cout << "eval: " << evalFunction(game) << '\n';
         }
