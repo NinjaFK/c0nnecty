@@ -189,7 +189,7 @@ void playbot()
         {
 
             std::pair<Move, int> bestMove;
-            bestMove = negamaxRoot(game, 100);
+            bestMove = negamaxRoot(game, 5000);
             game.makeMove(bestMove.first);
             std::cout << "eval: " << evalFunction(game) << '\n';
         }
