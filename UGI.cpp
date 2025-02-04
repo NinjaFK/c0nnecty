@@ -42,6 +42,7 @@ void UGI()
     Board game("7/7/7/7/7/7 0");
     bool stillPlaying = false;
     int pos = 0;
+    std::pair<Move, int> negamaxRoot(Board board, int hardStop);
 
     while (true)
     {
@@ -126,7 +127,9 @@ void UGI()
 
             std::pair<Move, int> bestMove;
 
-            bestMove = negamaxRoot(game, 5);
+            bestMove = negamaxRoot(game, 10);
+
+            game.makeMove(bestMove.first);
         }
 
         else if (split[0] == "checkwin")
