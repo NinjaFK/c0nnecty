@@ -38,15 +38,16 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
     settings.timeOut = false;
     settings.endTime = endTime;
 
-    Stack stack[256];
+    Stack stack[50];
     while (true)
     {
 
-        value = -negamax(board, depth, 0, stack, settings);
-        std::cout << "I get to depth: " << depth << '\n';
+        value = negamax(board, depth, 0, stack, settings);
         if (!settings.timeOut)
         {
+            std::cout << "I get to depth: " << depth << '\n';
             bestMove = stack[0].pv.moves[0];
+            std::cout << "BestMove: " << bestMove << '\n';
         }
 
         if (settings.timeOut || depth > 50)
