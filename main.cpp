@@ -96,11 +96,6 @@ int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &setti
         return 0;
     }
 
-    if (depth == 0)
-    {
-        return evalFunction(board);
-    }
-
     std::vector<Move> moves = board.getmoves();
     int bestMoveValue = -999999;
     int value = 0;
