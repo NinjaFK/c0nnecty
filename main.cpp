@@ -18,6 +18,8 @@ int evalFunction(Board board)
             }
         }
     }
+    if (board.turn == 2)
+        return -sum;
     return sum;
 }
 
