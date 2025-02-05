@@ -89,6 +89,11 @@ int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &setti
         return 0;
     }
 
+    if (depth == 0)
+    {
+        return evalFunction(board);
+    }
+
     if (std::chrono::high_resolution_clock::now() >= settings.endTime)
     {
         settings.timeOut = true;
@@ -167,13 +172,13 @@ void playbot()
 
         // check if game is over
 
-        if (game.turn == 1)
+        if (game.turn == 2)
         {
             std::cout << "Your move: ";
             while (true)
             {
                 std::cin >> pos;
-                if (game.board[0][pos] == 0)
+                if ((pos >= 0 && pos < 7) && game.board[0][pos] == 0)
                 {
                     break;
                 }
@@ -189,7 +194,7 @@ void playbot()
         {
 
             std::pair<Move, int> bestMove;
-            bestMove = negamaxRoot(game, 5000);
+            bestMove = negamaxRoot(game, 20000);
             game.makeMove(bestMove.first);
             std::cout << "eval: " << evalFunction(game) << '\n';
         }
