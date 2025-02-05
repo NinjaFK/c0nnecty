@@ -52,9 +52,9 @@ struct SearchSettings
 std::ostream &operator<<(std::ostream &os, const Move &move)
 {
     if (move.side == 1)
-        os << "\033[31m" << move.pos;
+        os << move.pos;
     else
-        os << "\033[33m" << move.pos;
+        os << move.pos;
     return os;
 }
 static const std::string reset = "\033[0m";
