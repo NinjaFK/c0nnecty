@@ -55,7 +55,6 @@ void UGI()
         if (split[0] == "isready")
         {
             std::cout << "readyok" << std::endl;
-            break;
         }
 
         // position fen 7/7/7/7/7/7 1 moves 2 3 2 2 3 3 3 3 3 0 0 0 0 0 0 2 4 5 4 5 4 4 2 2 5 5 5 6 1 1 1 6 6 4 1 5 1 1 4 6 6 6
@@ -86,13 +85,22 @@ void UGI()
 
         else if (split[0] == "query")
         {
+            std::string str = "false";
             if (split[1] == "p1turn")
             {
-                std::cout << "response " << !(game.turn - 1) << std::endl;
+                if (!(game.turn - 1))
+                {
+                    str = "true";
+                }
+                std::cout << "response " << str << std::endl;
             }
             if (split[1] == "gameover")
             {
-                std::cout << "response " << (game.over || game.isBoardFull()) << std::endl;
+                if ((game.over || game.isBoardFull()))
+                {
+                    str = "true";
+                }
+                std::cout << "response " << str << std::endl;
             }
             if (split[1] == "result")
             {
@@ -103,11 +111,11 @@ void UGI()
                 {
                     if (game.turn == 2)
                     {
-                        std::cout << "response p1wins" << std::endl;
+                        std::cout << "response p1win" << std::endl;
                     }
                     else
                     {
-                        std::cout << "response p2wins" << std::endl;
+                        std::cout << "response p2win" << std::endl;
                     }
                 }
                 if (game.isBoardFull())
@@ -133,7 +141,6 @@ void UGI()
 
             else if (split[1] == "p1time")
             {
-                std::pair<Move, int> bestMove;
                 int p1t = 0;
                 int p2t = 0;
                 int p1inc = 0;

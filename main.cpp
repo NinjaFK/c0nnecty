@@ -71,7 +71,7 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
 
         if (settings.timeOut || depth > 50)
         {
-            std::cout << "[DEBUG] Stopping iterative deepening. Timeout or max depth reached.\n";
+            // std::cout << "[DEBUG] Stopping iterative deepening. Timeout or max depth reached.\n";
             break;
         }
 
@@ -116,7 +116,7 @@ int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &setti
     if (std::chrono::high_resolution_clock::now() >= settings.endTime)
     {
         settings.timeOut = true;
-        std::cout << "[DEBUG] Timeout occurred during negamax.\n";
+        // std::cout << "[DEBUG] Timeout occurred during negamax.\n";
         return 0;
     }
 
