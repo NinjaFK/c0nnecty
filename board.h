@@ -166,6 +166,40 @@ public:
         turn = params[1][0] - '0';
     }
 
+    std::string toFEN()
+    {
+        std::string fen = "";
+
+        for (int i = 0; i < 6; i++)
+        {
+            int count = 0;
+            for (int j = 0; j < 7; j++)
+            {
+                if (board[i][j] == 0)
+                {
+                    count++;
+                }
+                else
+                {
+                    if (count > 0)
+                    {
+                        fen += std::to_string(count); // Add empty count to FEN
+                        count = 0;
+                    }
+                    fen += (board[i][j] == 1) ? 'r' : 'y'; // 'r' for Red, 'y' for Yellow
+                }
+            }
+            if (count > 0)
+            {
+                fen += std::to_string(count); // Final empty spaces in row
+            }
+            if (i < 5)
+                fen += "/"; // Separate rows
+        }
+        fen += " " + std::to_string(turn); // Append turn
+        return fen;
+    }
+
     bool isBoardFull()
     {
         for (int i = 0; i < 6; i++)
