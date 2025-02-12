@@ -38,6 +38,18 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
     settings.timeOut = false;
     settings.endTime = endTime;
 
+    if (board.over == 1)
+    {
+        std::cout << "[DEBUG] Game already over. Returning evaluation.\n";
+        return {Move(-1, -1), -10000}; // Losing evaluation
+    }
+
+    if (board.isBoardFull())
+    {
+        std::cout << "[DEBUG] Board is full. Returning draw evaluation.\n";
+        return {Move(-1, -1), 0}; // Draw evaluation
+    }
+
     Stack stack[50];
     while (true)
     {
@@ -45,9 +57,16 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
         value = negamax(board, depth, 0, stack, settings);
         if (!settings.timeOut)
         {
-            std::cout << "I get to depth: " << depth << '\n';
+            auto elapsed = std::chrono::high_resolution_clock::now() - start;
+            int u = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+
+            std::cout << "info depth " << depth << " score " << value << " time " << u << " pv ";
+            for (auto move : stack[0].pv.moves)
+            {
+                std::cout << move << " ";
+            }
+            std::cout << std::endl;
             bestMove = stack[0].pv.moves[0];
-            std::cout << "BestMove: " << bestMove << '\n';
         }
 
         if (settings.timeOut || depth > 50)
@@ -119,6 +138,10 @@ int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &setti
         {
             stack[ply].pv.moves.clear();
             stack[ply].pv.moves.push_back(moves[i]);
+            if (stack[ply + 1].pv.moves.size() >= 1)
+            {
+                stack[ply].pv.moves.insert(stack[ply].pv.moves.end(), stack[ply + 1].pv.moves.begin(), stack[ply + 1].pv.moves.end());
+            }
             bestMoveValue = value;
         }
     }
@@ -153,7 +176,7 @@ void playbot()
         if (game.over)
         {
             std::cout << "Game over ";
-            if (game.turn)
+            if (game.turn == 1)
             {
                 std::cout << "Yellow wins\n";
             }
@@ -194,7 +217,7 @@ void playbot()
         {
 
             std::pair<Move, int> bestMove;
-            bestMove = negamaxRoot(game, 20000);
+            bestMove = negamaxRoot(game, 3000);
             game.makeMove(bestMove.first);
             std::cout << "eval: " << evalFunction(game) << '\n';
         }
