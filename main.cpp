@@ -32,51 +32,55 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
     int depth = 1;
     Move bestMove = Move(0, 0);
     int value = 0;
-    std::chrono::time_point<std::chrono::high_resolution_clock> endTime = start + std::chrono::milliseconds(hardStop);
 
-    SearchSettings settings;
-    settings.timeOut = false;
-    settings.endTime = endTime;
+    std::vector<Move> posMoves = board.getmoves();
+    bestMove = posMoves[rand() % posMoves.size()];
 
-    if (board.over == 1)
-    {
-        std::cout << "[DEBUG] Game already over. Returning evaluation.\n";
-        return {Move(-1, -1), -10000}; // Losing evaluation
-    }
+    // std::chrono::time_point<std::chrono::high_resolution_clock> endTime = start + std::chrono::milliseconds(hardStop);
 
-    if (board.isBoardFull())
-    {
-        std::cout << "[DEBUG] Board is full. Returning draw evaluation.\n";
-        return {Move(-1, -1), 0}; // Draw evaluation
-    }
+    // SearchSettings settings;
+    // settings.timeOut = false;
+    // settings.endTime = endTime;
 
-    Stack stack[50];
-    while (true)
-    {
+    // if (board.over == 1)
+    // {
+    //     std::cout << "[DEBUG] Game already over. Returning evaluation.\n";
+    //     return {Move(-1, -1), -10000}; // Losing evaluation
+    // }
 
-        value = negamax(board, depth, 0, stack, settings);
-        if (!settings.timeOut)
-        {
-            auto elapsed = std::chrono::high_resolution_clock::now() - start;
-            int u = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
+    // if (board.isBoardFull())
+    // {
+    //     std::cout << "[DEBUG] Board is full. Returning draw evaluation.\n";
+    //     return {Move(-1, -1), 0}; // Draw evaluation
+    // }
 
-            std::cout << "info depth " << depth << " score " << value << " time " << u << " pv ";
-            for (auto move : stack[0].pv.moves)
-            {
-                std::cout << move << " ";
-            }
-            std::cout << std::endl;
-            bestMove = stack[0].pv.moves[0];
-        }
+    // Stack stack[50];
+    // while (true)
+    // {
 
-        if (settings.timeOut || depth > 50)
-        {
-            // std::cout << "[DEBUG] Stopping iterative deepening. Timeout or max depth reached.\n";
-            break;
-        }
+    //     value = negamax(board, depth, 0, stack, settings);
+    //     if (!settings.timeOut)
+    //     {
+    //         auto elapsed = std::chrono::high_resolution_clock::now() - start;
+    //         int u = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
 
-        depth++;
-    }
+    //         std::cout << "info depth " << depth << " score " << value << " time " << u << " pv ";
+    //         for (auto move : stack[0].pv.moves)
+    //         {
+    //             std::cout << move << " ";
+    //         }
+    //         std::cout << std::endl;
+    //         bestMove = stack[0].pv.moves[0];
+    //     }
+
+    //     if (settings.timeOut || depth > 50)
+    //     {
+    //         // std::cout << "[DEBUG] Stopping iterative deepening. Timeout or max depth reached.\n";
+    //         break;
+    //     }
+
+    //     depth++;
+    // }
 
     // std::vector<Move> moves = board.getmoves();
     // int bestMoveValue = -999999;
@@ -152,7 +156,7 @@ void playbot();
 
 int main()
 {
-
+    srand(time(NULL));
     std::string input;
     std::getline(std::cin, input);
 
