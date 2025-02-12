@@ -58,6 +58,7 @@ void UGI()
             break;
         }
 
+        // position fen 7/7/7/7/7/7 1 moves 2 3 2 2 3 3 3 3 3 0 0 0 0 0 0 2 4 5 4 5 4 4 2 2 5 5 5 6 1 1 1 6 6 4 1 5 1 1 4 6 6 6
         else if (split[0] == "position")
         {
             if (split[1] == "fen")
@@ -76,8 +77,6 @@ void UGI()
                 while (split.size() > i)
                 {
                     int test = stoi(split[i]);
-                    std::cout << "test " << test << '\n';
-                    std::cout << "turn " << game.turn << '\n';
                     game.makeMove(Move(stoi(split[i]), game.turn));
                     i++;
                 }
@@ -93,16 +92,16 @@ void UGI()
             }
             if (split[1] == "gameover")
             {
-                std::cout << "response " << game.over << std::endl;
+                std::cout << "response " << (game.over || game.isBoardFull()) << std::endl;
             }
             if (split[1] == "result")
             {
-                if (stillPlaying)
+                if (!game.checkWin())
                     std::cout << "response none" << std::endl;
 
                 if (game.over)
                 {
-                    if (game.turn == 0)
+                    if (game.turn == 2)
                     {
                         std::cout << "response p1wins" << std::endl;
                     }
@@ -124,12 +123,39 @@ void UGI()
         else if (split[0] == "go")
         {
             int mtime = 100;
-
             std::pair<Move, int> bestMove;
 
-            bestMove = negamaxRoot(game, 7000);
+            if (split[1] == "movetime")
+            {
+                mtime = stoi(split[2]);
+                bestMove = negamaxRoot(game, mtime);
+            }
 
-            std::cout << "bestmove " << bestMove.first << '\n';
+            else if (split[1] == "p1time")
+            {
+                std::pair<Move, int> bestMove;
+                int p1t = 0;
+                int p2t = 0;
+                int p1inc = 0;
+                int p2inc = 0;
+
+                p1t = stoi(split[2]);
+                p2t = stoi(split[4]);
+
+                p1inc = stoi(split[6]);
+                p2inc = stoi(split[8]);
+
+                if (game.turn = 1)
+                {
+                    bestMove = negamaxRoot(game, std::min(p1t / 2, (p1t / 20) + p1inc));
+                }
+                else
+                {
+                    bestMove = negamaxRoot(game, std::min(p2t / 2, (p2t / 20) + p2inc));
+                }
+            }
+
+            std::cout << "bestmove " << bestMove.first << std::endl;
         }
 
         else if (split[0] == "checkwin")
