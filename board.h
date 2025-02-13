@@ -72,7 +72,7 @@ class Board
 {
 public:
     int board[6][7] = {0};
-    int turn;
+    int turn; // 1 for red 2 for yellow
     int over;
     std::vector<Move> history;
 
