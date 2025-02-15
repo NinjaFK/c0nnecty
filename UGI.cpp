@@ -152,13 +152,16 @@ void UGI()
                 p1inc = stoi(split[6]);
                 p2inc = stoi(split[8]);
 
-                if (game.turn = 1)
+                int p1min = std::min(p1t / 2, (p1t / 20) + p1inc);
+                int p2min = std::min(p2t / 2, (p2t / 20) + p2inc);
+
+                if (game.turn == 1)
                 {
-                    bestMove = negamaxRoot(game, std::min(p1t / 2, (p1t / 20) + p1inc));
+                    bestMove = negamaxRoot(game, p1min);
                 }
                 else
                 {
-                    bestMove = negamaxRoot(game, std::min(p2t / 2, (p2t / 20) + p2inc));
+                    bestMove = negamaxRoot(game, p2min);
                 }
             }
 
