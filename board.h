@@ -280,7 +280,6 @@ public:
         if (pieceCheckWin(count, toMake.pos, toMake.side))
         {
             over = 1;
-            return toMake.side;
         }
 
         return 0;
