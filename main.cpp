@@ -1,5 +1,7 @@
 #include "include.h"
 
+const int INF = 999999;
+
 // eval
 int evalFunction(Board board)
 {
@@ -23,7 +25,7 @@ int evalFunction(Board board)
     return sum;
 }
 
-int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &settings);
+int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, SearchSettings &settings);
 
 // minimaxRoot
 std::pair<Move, int> negamaxRoot(Board board, int hardStop)
@@ -54,7 +56,7 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
     while (true)
     {
 
-        value = negamax(board, depth, 0, stack, settings);
+        value = negamax(board, depth, -INF, INF, 0, stack, settings);
         if (!settings.timeOut)
         {
             auto elapsed = std::chrono::high_resolution_clock::now() - start;
@@ -97,7 +99,7 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
 }
 
 // minimax
-int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &settings)
+int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, SearchSettings &settings)
 {
     if (board.over == 1)
     {
@@ -128,15 +130,16 @@ int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &setti
     }
 
     std::vector<Move> moves = board.getmoves();
-    int bestMoveValue = -999999;
+    int bestMoveValue = -INF;
     int value = 0;
+    int alphaOrig = alpha;
 
     for (int i = 0; i < moves.size(); i++)
     {
         stack[ply + 1].pv.moves.clear();
         Board cboard = board;
         cboard.makeMove(moves[i]);
-        value = -negamax(cboard, depth - 1, ply + 1, stack, settings);
+        value = -negamax(cboard, depth - 1, -beta, -alpha, ply + 1, stack, settings);
         if (settings.timeOut)
         {
             return 0;
@@ -150,6 +153,11 @@ int negamax(Board board, int depth, int ply, Stack *stack, SearchSettings &setti
                 stack[ply].pv.moves.insert(stack[ply].pv.moves.end(), stack[ply + 1].pv.moves.begin(), stack[ply + 1].pv.moves.end());
             }
             bestMoveValue = value;
+        }
+        alpha = std::max(alpha, value);
+        if (alpha >= beta)
+        {
+            break;
         }
     }
     return bestMoveValue;
