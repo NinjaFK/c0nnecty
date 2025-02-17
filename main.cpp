@@ -105,11 +105,11 @@ int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, 
     {
         if (board.checkWin() == board.turn)
         {
-            return 10000;
+            return 10000 - ply;
         }
         else
         {
-            return -10000;
+            return -(10000 - ply);
         }
     }
     if (board.isBoardFull())
@@ -280,7 +280,7 @@ void playbot()
         {
 
             std::pair<Move, int> bestMove;
-            bestMove = negamaxRoot(game, 3000);
+            bestMove = negamaxRoot(game, 5000);
             game.makeMove(bestMove.first);
             std::cout << "eval: " << evalFunction(game) << '\n';
         }
