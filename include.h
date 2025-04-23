@@ -10,3 +10,5 @@
 
 #include "board.h"
 #include "UGI.cpp"
+#include "Movepicker.cpp"
+#include "tt.cpp"
