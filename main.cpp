@@ -25,10 +25,9 @@ int evalFunction(Board board)
     return sum;
 }
 
-int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, SearchSettings &settings);
+int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, SearchSettings &settings, TransTable &TT);
 
-// minimaxRoot
-std::pair<Move, int> negamaxRoot(Board board, int hardStop)
+std::pair<Move, int> IterativeDeepening(Board board, int hardStop, TransTable &TT)
 {
     auto start = std::chrono::high_resolution_clock::now();
     int depth = 1;
@@ -56,7 +55,7 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
     while (true)
     {
 
-        value = negamax(board, depth, -INF, INF, 0, stack, settings);
+        value = negamax(board, depth, -INF, INF, 0, stack, settings, TT);
         if (!settings.timeOut)
         {
             auto elapsed = std::chrono::high_resolution_clock::now() - start;
@@ -99,7 +98,7 @@ std::pair<Move, int> negamaxRoot(Board board, int hardStop)
 }
 
 // minimax
-int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, SearchSettings &settings)
+int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, SearchSettings &settings, TransTable &TT)
 {
     if (board.over == 1)
     {
@@ -133,6 +132,7 @@ int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, 
     int bestMoveValue = -INF;
     int value = 0;
     int alphaOrig = alpha;
+    TTEntry entry = TT.probe(board.hash());
 
     for (int i = 0; i < moves.size(); i++)
     {
