@@ -104,7 +104,13 @@ public:
     int board[6][7] = {0};
     int turn; // 1 for red 2 for yellow
     int over;
+    uint64_t hash_ = 0ULL;
     std::vector<Move> history;
+
+    uint64_t hash()
+    {
+        return hash_;
+    }
 
     Board(std::string fen)
     {
@@ -166,6 +172,27 @@ public:
         } */
 
         return moves;
+    }
+    uint64_t zobrist()
+    {
+        uint64_t hash_key = 0ULL;
+
+        for (int i = 0; i < 6; i++)
+        {
+            for (int j = 0; j < 7; j++)
+            {
+                if (board[i][j] == 1)
+                {
+                    hash_key ^= zobrist::RANDOM_ARRAY[i * j];
+                }
+                if (board[i][j] == 2)
+                {
+                    hash_key ^= zobrist::RANDOM_ARRAY[i * j + 42];
+                }
+            }
+        }
+
+        return hash_key;
     }
 
     void setFen(std::string fen)
