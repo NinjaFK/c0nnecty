@@ -20,4 +20,14 @@ public:
             table.resize(numEntries);
         }
     }
+
+    TTEntry probe(uint32_t hash)
+    {
+        return table[hash % numEntries];
+    }
+
+    void insert(TTEntry entry)
+    {
+        table[entry.hash % numEntries] = entry;
+    }
 };
