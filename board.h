@@ -21,14 +21,17 @@ public:
     {
         pos = 0;
         side = 1;
+        score = 0;
     }
     Move(int p, int s)
     {
         pos = p;
         side = s;
+        score = 0;
     }
     int pos;
     int side;
+    int score;
 
     friend std::ostream &operator<<(std::ostream &os, const Move &move);
 };
