@@ -2,6 +2,9 @@
 
 const int INF = 999999;
 
+static int tt_hits = 0;
+static int tt_misses = 0;
+
 // eval
 int evalFunction(Board board)
 {
@@ -58,6 +61,7 @@ std::pair<Move, int> IterativeDeepening(Board board, int hardStop, TransTable &T
         value = negamax(board, depth, -INF, INF, 0, stack, settings, TT);
         if (!settings.timeOut)
         {
+            bestMove = stack[0].pv.moves[0];
             auto elapsed = std::chrono::high_resolution_clock::now() - start;
             int u = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
 
@@ -67,7 +71,6 @@ std::pair<Move, int> IterativeDeepening(Board board, int hardStop, TransTable &T
                 std::cout << move << " ";
             }
             std::cout << std::endl;
-            bestMove = stack[0].pv.moves[0];
         }
 
         if (settings.timeOut || depth > 50)
@@ -79,21 +82,7 @@ std::pair<Move, int> IterativeDeepening(Board board, int hardStop, TransTable &T
         depth++;
     }
 
-    // std::vector<Move> moves = board.getmoves();
-    // int bestMoveValue = -999999;
-    // for (int i = 0; i < moves.size(); i++)
-    // {
-    //     Board cboard = board;
-    //     cboard.makeMove(moves[i]);
-    //     std::cout << "moves[i]: " << moves[i] << '\n';
-    //     value = -negamax(cboard, depth - 1);
-    //     std::cout << "value: " << value << '\n';
-    //     if (value > bestMoveValue)
-    //     {
-    //         bestMove = moves[i];
-    //         bestMoveValue = value;
-    //     }
-    // }
+    std::cout << "[TT] Hits: " << tt_hits << " | Misses: " << tt_misses << "\n";
     return {bestMove, value};
 }
 
@@ -121,6 +110,21 @@ int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, 
         return evalFunction(board);
     }
 
+    TTEntry entry = TT.probe(board.hash());
+    if (entry.hash == board.hash() && entry.depth >= depth)
+    {
+        tt_hits++;
+        if (alpha >= beta)
+        {
+            stack[ply].pv.moves.push_back(entry.bestMove);
+            return entry.score;
+        }
+    }
+    else
+    {
+        tt_misses++;
+    }
+
     if (std::chrono::high_resolution_clock::now() >= settings.endTime)
     {
         settings.timeOut = true;
@@ -132,14 +136,13 @@ int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, 
     int bestMoveValue = -INF;
     int value = 0;
     int alphaOrig = alpha;
-    TTEntry entry = TT.probe(board.hash());
 
     for (int i = 0; i < moves.size(); i++)
     {
         stack[ply + 1].pv.moves.clear();
         Board cboard = board;
         cboard.makeMove(moves[i]);
-        value = -negamax(cboard, depth - 1, -beta, -alpha, ply + 1, stack, settings);
+        value = -negamax(cboard, depth - 1, -beta, -alpha, ply + 1, stack, settings, TT);
         if (settings.timeOut)
         {
             return 0;
@@ -160,6 +163,15 @@ int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, 
             break;
         }
     }
+    entry.hash = board.hash();
+    if (stack[ply].pv.moves.size() != 0)
+    {
+        entry.bestMove = stack[ply].pv.moves[0];
+    }
+    entry.score = bestMoveValue;
+    entry.depth = depth;
+
+    TT.insert(entry);
     return bestMoveValue;
 }
 
@@ -280,7 +292,8 @@ void playbot()
         {
 
             std::pair<Move, int> bestMove;
-            bestMove = negamaxRoot(game, 5000);
+            TransTable TT(16);
+            bestMove = IterativeDeepening(game, 5000, TT);
             game.makeMove(bestMove.first);
             std::cout << "eval: " << evalFunction(game) << '\n';
         }
