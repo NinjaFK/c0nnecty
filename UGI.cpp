@@ -42,7 +42,9 @@ void UGI()
     Board game("7/7/7/7/7/7 1");
     bool stillPlaying = false;
     int pos = 0;
-    std::pair<Move, int> negamaxRoot(Board board, int hardStop);
+    int hashSize = 16;
+    TransTable TT(hashSize);
+    std::pair<Move, int> IterativeDeepening(Board board, int hardStop, TransTable &TT);
 
     while (true)
     {
@@ -136,7 +138,7 @@ void UGI()
             if (split[1] == "movetime")
             {
                 mtime = stoi(split[2]);
-                bestMove = negamaxRoot(game, mtime);
+                bestMove = IterativeDeepening(game, mtime, TT);
             }
 
             else if (split[1] == "p1time")
@@ -157,11 +159,11 @@ void UGI()
 
                 if (game.turn == 1)
                 {
-                    bestMove = negamaxRoot(game, p1min);
+                    bestMove = IterativeDeepening(game, p1min, TT);
                 }
                 else
                 {
-                    bestMove = negamaxRoot(game, p2min);
+                    bestMove = IterativeDeepening(game, p2min, TT);
                 }
             }
 
