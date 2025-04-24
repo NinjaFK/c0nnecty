@@ -9,6 +9,6 @@
 #include <fstream>
 
 #include "board.h"
+#include "tt.cpp"
 #include "UGI.cpp"
 #include "Movepicker.cpp"
-#include "tt.cpp"
