@@ -20,16 +20,19 @@ public:
     Move()
     {
         pos = 0;
+        row = -1;
         side = 1;
         score = 0;
     }
     Move(int p, int s)
     {
         pos = p;
+        row = -1;
         side = s;
         score = 0;
     }
     int pos;
+    int row;
     int side;
     int score;
 
@@ -85,6 +88,11 @@ namespace zobrist
         0x14ACBAF4777D5776, 0xF145B6BECCDEA195, 0xDABF2AC8201752FC, 0x24C3C94DF9C8D3F6,
         0xBB6E2924F03912EA, 0x0CE26C0B95C980D9, 0xA49CD132BFBF7CC4, 0xE99D662AF4243939,
         0x27E6AD7891165C3F, 0x8535F040B9744FF1, 0x54B3F4FA5F40D873, 0x72B12C32127FED2B};
+
+    inline uint64_t piece(Move move)
+    {
+        return RANDOM_ARRAY[move.pos * move.row + (move.side - 1) * 42];
+    }
 }
 
 static const std::string reset = "\033[0m";
@@ -221,6 +229,7 @@ public:
             }
         }
         turn = params[1][0] - '0';
+        hash_ = zobrist();
     }
 
     std::string toFEN()
@@ -255,6 +264,11 @@ public:
         }
         fen += " " + std::to_string(turn); // Append turn
         return fen;
+    }
+
+    void placePiece(Move move)
+    {
+        hash_ ^= zobrist::piece(move);
     }
 
     bool isBoardFull()
@@ -330,6 +344,8 @@ public:
             }
             count++;
         }
+        toMake.row = count;
+        placePiece(toMake);
         board[count][toMake.pos] = toMake.side;
         turn = (turn == 1) ? 2 : 1;
 
