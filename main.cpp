@@ -132,16 +132,18 @@ int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, 
         return 0;
     }
 
-    std::vector<Move> moves = board.getmoves();
+    // std::vector<Move> moves = board.getmoves();
     int bestMoveValue = -INF;
     int value = 0;
     int alphaOrig = alpha;
+    MovePicker moves(board, entry.bestMove);
+    Move move;
 
-    for (int i = 0; i < moves.size(); i++)
+    while (moves.next(move, board))
     {
         stack[ply + 1].pv.moves.clear();
         Board cboard = board;
-        cboard.makeMove(moves[i]);
+        cboard.makeMove(move);
         value = -negamax(cboard, depth - 1, -beta, -alpha, ply + 1, stack, settings, TT);
         if (settings.timeOut)
         {
