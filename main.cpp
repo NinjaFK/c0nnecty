@@ -152,7 +152,7 @@ int negamax(Board board, int depth, int alpha, int beta, int ply, Stack *stack, 
         if (value > bestMoveValue)
         {
             stack[ply].pv.moves.clear();
-            stack[ply].pv.moves.push_back(moves[i]);
+            stack[ply].pv.moves.push_back(move);
             if (stack[ply + 1].pv.moves.size() >= 1)
             {
                 stack[ply].pv.moves.insert(stack[ply].pv.moves.end(), stack[ply + 1].pv.moves.begin(), stack[ply + 1].pv.moves.end());
